@@ -172,5 +172,18 @@ module OAuth2
     def assertion
       @assertion ||= OAuth2::Strategy::Assertion.new(self)
     end
+
+    def validate_url(params = nil)
+      connection.build_url(options[:validate_url], params).to_s
+    end
+
+    def validate(params = {})
+      opts = {:raise_errors => options[:raise_errorclients], :parse => params.delete(:parse)}
+      opts[:params] = params
+      response = request(:get, validate_url, opts)
+      error = Error.new(response)
+      fail(error) if options[:raise_errors] && !(response.parsed.is_a?(Hash) && response.parsed['valid'])
+      response
+    end
   end
 end

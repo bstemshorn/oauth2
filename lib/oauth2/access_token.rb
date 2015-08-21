@@ -147,6 +147,10 @@ module OAuth2
       {'Authorization' => options[:header_format] % token}
     end
 
+    def valid?
+      @client.validate(:access_token => token).parsed['valid']
+    end
+
   private
 
     def token=(opts) # rubocop:disable MethodLength
