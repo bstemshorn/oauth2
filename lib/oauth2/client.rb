@@ -185,5 +185,19 @@ module OAuth2
       fail(error) if options[:raise_errors] && !(response.parsed.is_a?(Hash) && response.parsed['valid'])
       response
     end
+
+    def userinfo_url(param= nil)
+      connection.build_url(options[:userinfo_url], params).to_s
+    end
+
+    def get_userinfo(params={})
+      opts = {:raise_errors => options[:raise_errorclients], :parse => params.delete(:parse)}
+      opts[:params] = params
+      response = request(:get, userinfo_url, opts)
+      error = Error.new(response)
+      fail(error) if options[:raise_errors] && !(response.parsed.is_a?(Hash) && response.parsed['inum'])
+      response
+    end
+
   end
 end
